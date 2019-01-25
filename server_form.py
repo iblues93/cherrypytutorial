@@ -4,7 +4,7 @@ Start this server!
 Access it at localhost:8080/index
 """
 
-import cherrypy
+import cherrypy, base64, os
 
 class FileNameReceiver(object):
     @cherrypy.expose
@@ -29,6 +29,12 @@ class FileNameReceiver(object):
     @cherrypy.expose
     def echo_file_name(self, filepath):
         return "The file path you entered is : {}".format(filepath)
+
+    @cherrypy.expose
+    def get_img(self, filename, data):
+        with open("uploads/{}".format(filename),'wb') as f:
+            f.write(base64.b64decode(data))
+        return "{} received.".format(filename)
 
 if __name__ == '__main__':
     cherrypy.quickstart(FileNameReceiver())
