@@ -22,10 +22,39 @@ class FileNameReceiver(object):
               <input type="text" name="filepath" />
               <button type="submit">Send your file name!</button>
             </form>
-           
+            <p>Upload your file!</p> 
+            <form method="post" enctype="multipart/form-data" action="upload">
+              <input type="file" name="myFile" />
+              <button type="submit">Send your file name!</button>
+            </form>
           </body>
         </html>"""
 
+    @cherrypy.expose
+    def upload(self, myFile):
+        out = """<html>
+        <body>
+            myFile length: %s<br />
+            myFile filename: %s<br />
+            myFile mime-type: %s
+        </body>
+        </html>"""
+
+        # Although this just counts the file length, it demonstrates
+        # how to read large files in chunks instead of all at once.
+        # CherryPy reads the uploaded file into a temporary file;
+        # myFile.file.read reads from that.
+        with open("uploads/html_upload.jpg",'wb') as f:
+            size = 0
+            while True:
+                data = myFile.file.read(8192)
+                if not data:
+                    break
+                f.write(data)
+                size += len(data)
+
+        return out % (size, myFile.filename, myFile.content_type)
+    
     @cherrypy.expose
     def echo_file_name(self, filepath):
         return "The file path you entered is : {}".format(filepath)

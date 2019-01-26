@@ -13,6 +13,8 @@ else:
 # For transfering of large files, this requires the use of POST. GET do not work because of large Base64 strings for large images
 print("Testing uploading photo through webservice...")
 
+input("Continue?")
+
 image_path = "test.jpg"
 
 with open(image_path, "rb") as image_file:
